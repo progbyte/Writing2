@@ -115,13 +115,13 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/btn_clearclass"
             android:text="删除"
-            android:textColor="@drawable/btn_clearclasstextcolor"></Button>
+            android:textColor="@drawable/btn_clearclasstextcolor" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/bgtu"></androidx.appcompat.widget.AppCompatImageView>
+            android:background="@drawable/bgtu" />
 
     </LinearLayout>
 </LinearLayout>

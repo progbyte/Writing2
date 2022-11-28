@@ -3,16 +3,13 @@ package com.example.writing;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Objects;
 
 class GetData {
     //读取数据
     public  String readJsonFile(String p,String pp) {
-
         StringBuilder sb = new StringBuilder();
-
             File file;
-            if(!Objects.equals(pp, "")) {
+            if(!pp.equals("")) {
                  file = new File(pp);
 
             }else {

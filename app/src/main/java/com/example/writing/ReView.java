@@ -1,13 +1,13 @@
 package com.example.writing;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,6 @@ public class ReView extends View {
     public List<List<WordPoint>> listPointB=new ArrayList<>();
     public boolean canDraw=true;
     public boolean canReDraw=false;
-    public final Canvas cacheCanvas;
     public List<Integer>mColor=new ArrayList<>();
     public List<List<Integer>>colorB=new ArrayList<>();
     private final Paint paint;
@@ -27,8 +26,6 @@ public class ReView extends View {
         paint.setAntiAlias(true);
         paint.setStrokeWidth(100);
         paint.setStyle(Paint.Style.STROKE);
-        Bitmap cachebBitmap = Bitmap.createBitmap(596, 372, Bitmap.Config.ARGB_8888);
-        cacheCanvas = new Canvas(cachebBitmap);
     }
     //画线
     @Override

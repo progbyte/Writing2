@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private String password;
     private String filename;
     private long firstTime = 0;
-    private Spinner spinnertext;
+    private Spinner spinner_text;
     private ArrayAdapter<String> adapter;
     private List<String>list;
     private String st="";
@@ -92,15 +92,15 @@ public class MainActivity extends AppCompatActivity {
                 else
                     Toast.makeText(MainActivity.this, "没有练习！", Toast.LENGTH_SHORT).show();
             });
-        spinnertext = (Spinner) findViewById(R.id.spinner1);
+        spinner_text = findViewById(R.id.spinner1);
         //第二步：为下拉列表定义一个适配器
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         //第三步：设置下拉列表下拉时的菜单样式
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //第四步：将适配器添加到下拉列表上
-        spinnertext.setAdapter(adapter);
+        spinner_text.setAdapter(adapter);
         //第五步：添加监听器，为下拉列表设置事件的响应
-        spinnertext.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+        spinner_text.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> argO, View argl, int arg2, long arg3) {
                 // TODO Auto-generated method stub
                 st=adapter.getItem(arg2);
@@ -152,15 +152,15 @@ public class MainActivity extends AppCompatActivity {
                 list=getFilesAllName(s);
                 Log.d("SS","list"+list);
             }catch (Exception ignored) {}
-            spinnertext = (Spinner) findViewById(R.id.spinner1);
+            spinner_text = findViewById(R.id.spinner1);
             //第二步：为下拉列表定义一个适配器
             adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, list);
             //第三步：设置下拉列表下拉时的菜单样式
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             //第四步：将适配器添加到下拉列表上
-            spinnertext.setAdapter(adapter);
+            spinner_text.setAdapter(adapter);
             //第五步：添加监听器，为下拉列表设置事件的响应
-            spinnertext.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            spinner_text.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> argO, View argl, int arg2, long arg3) {
                     // TODO Auto-generated method stub
                     st=adapter.getItem(arg2);

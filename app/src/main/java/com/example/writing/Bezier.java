@@ -37,6 +37,12 @@ public class Bezier {
         mControl.set(getMid(lastx,xmid),getMid(lasty,ymid),getMid(lastWidth,wmid));
         //下个控制点为当前点
         mNextControl.set(x, y, width);
+        /*
+         Source       A (last)
+         Control     (A+C)/2 = A*3/4 + B*1/4
+         Destination (A+B)/2 = C
+         NextControl B (new)
+         */
     }
 
     public void addNode(WordPoint cur){
@@ -54,6 +60,14 @@ public class Bezier {
         mControl.set(mNextControl);
         mDestination.set(getMid(mNextControl.x, x), getMid(mNextControl.y, y), getMid(mNextControl.width, width));
         mNextControl.set(x, y, width);
+        /*
+         Source
+         Control
+         Destination     --> Source
+         NextControl - A --> Control
+                 (A+B)/2 --> Destination
+                 B (new) --> NextControl
+         */
     }
 
     /**
@@ -71,7 +85,7 @@ public class Bezier {
     }
 
     /**
-     *
+     * GetPoint
      */
     public WordPoint getPoint(double t){
         float x = (float)getX(t);

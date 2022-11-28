@@ -41,17 +41,17 @@ import java.util.Date;
 import java.util.List;
 
 public class NoteActivity extends Activity implements View.OnClickListener{
-    private String ff;
-    private String f;
+    private String txtFileAndPath;
+    private String txtFilename;
     private final static float DESIGN_WIDTH = 750; //绘制页面时参照的设计图宽度
     private int select_paint_size_index = 2;
     private int select_paint_color_index = 0;
     private final GetData getData=new GetData();
-    private String path2,path3;
+    private String picturePath, pointDataPath;
     private NoteView fvFont;
     private static final List<Bitmap> listBitMap= new ArrayList<>();
     private final List<List<List<WordPoint>>>  listAllPoint= new ArrayList<>();
-    private List<Han> list_han= new ArrayList<>();
+    private List<Han> listHans = new ArrayList<>();
 
     public ArrayList<String> results= new ArrayList<>();
 
@@ -81,11 +81,11 @@ public class NoteActivity extends Activity implements View.OnClickListener{
                     han.setName(output);
 
                     //这部分是原来完成按钮保存文件的部分
-                    list_han.add(han);
-                    saveToLocal(f);
+                    listHans.add(han);
+                    saveToLocal(txtFilename); // 学号-姓名-课本.txt
 
                     //把识别结果保存在本地文件，注意，这个并没有解决存在同一个文件的问题，因此分享结果并不能分享文字识别的结果
-                    File file = new File(path2, han.getId()+".txt");
+                    File file = new File(picturePath, han.getId()+".txt");
                     OutputStream out;
                     try {
 
@@ -113,9 +113,9 @@ public class NoteActivity extends Activity implements View.OnClickListener{
         super.onCreate(s);
         resetDensity();//注意不要漏掉
         setContentView(R.layout.note);
-        initData();
+        initPathData();
         initUI();
-        initData1();
+        initData();
     }
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
@@ -134,30 +134,18 @@ public class NoteActivity extends Activity implements View.OnClickListener{
     }
     private void initUI(){
         //标题框
-        Button btnComplete = (Button) findViewById(R.id.btnComplete);
-        Button btnReWrite = (Button) findViewById(R.id.btnReWrite);
-        Button reback = (Button) findViewById(R.id.btnReBack);
-        ImageView setting = (ImageView) findViewById(R.id.setting);
+        Button btnComplete = findViewById(R.id.btnComplete);
+        Button btnReWrite = findViewById(R.id.btnReWrite);
+        Button reback = findViewById(R.id.btnReBack);
+        ImageView setting = findViewById(R.id.setting);
         btnComplete.setOnClickListener(this);
         btnReWrite.setOnClickListener(this);
         reback.setOnClickListener(this);
         setting.setOnClickListener(this);
-        fvFont=(NoteView)findViewById(R.id.fvFont);
+        fvFont= findViewById(R.id.fvFont);
 
     }
 
-    //弹出画笔颜色选项对话框
-    private void showPaintColorDialog(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this,R.style.custom_dialog);
-        alertDialogBuilder.setTitle("选择画笔颜色：");
-        alertDialogBuilder.setSingleChoiceItems(R.array.paintcolor, select_paint_color_index, (dialog, which) -> {
-            select_paint_color_index = which;
-            fvFont.selectPaintColor(which);
-            dialog.dismiss();
-        });
-        alertDialogBuilder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
-        alertDialogBuilder.create().show();
-    }
     //弹出画笔设置选项对话框
     private void showSetDialog(){
         final String[] set = new String[] { "字体大小","字体颜色" };
@@ -169,6 +157,19 @@ public class NoteActivity extends Activity implements View.OnClickListener{
             }else if(which==0){
                 showPaintSizeDialog();
             }
+            dialog.dismiss();
+        });
+        alertDialogBuilder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+        alertDialogBuilder.create().show();
+    }
+
+    //弹出画笔颜色选项对话框
+    private void showPaintColorDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this,R.style.custom_dialog);
+        alertDialogBuilder.setTitle("选择画笔颜色：");
+        alertDialogBuilder.setSingleChoiceItems(R.array.paintcolor, select_paint_color_index, (dialog, which) -> {
+            select_paint_color_index = which;
+            fvFont.selectPaintColor(which);
             dialog.dismiss();
         });
         alertDialogBuilder.setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
@@ -188,7 +189,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
         alertDialogBuilder.create().show();
     }
     //创建文件夹
-    private void initData() {
+    private void initPathData() {
         //如果手机有sd卡
         try {
             String path = Environment.getExternalStorageDirectory()
@@ -197,54 +198,53 @@ public class NoteActivity extends Activity implements View.OnClickListener{
             File files = new File(path);
             if (!files.exists()) {
                 //如果有没有文件夹就创建文件夹
-                files.mkdir();
+                Log.d("progsofts", "" + files.mkdir());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            path2 = Environment.getExternalStorageDirectory()
+            picturePath = Environment.getExternalStorageDirectory()
                     .getCanonicalPath()
                     + "/Writing/Picture";
-            File file1 = new File(path2);
+            File file1 = new File(picturePath);
             if (!file1.exists()) {
                 //如果有没有文件夹就创建文件夹
-                file1.mkdir();
+                Log.d("progsofts", "" + file1.mkdir());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            path3 = Environment.getExternalStorageDirectory()
+            pointDataPath = Environment.getExternalStorageDirectory()
                     .getCanonicalPath()
                     + "/Writing/PointData";
-            File file2 = new File(path3);
+            File file2 = new File(pointDataPath);
             if (!file2.exists()) {
                 //如果有没有文件夹就创建文件夹
-                file2.mkdir();
+                Log.d("progsofts", "" + file2.mkdir());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private  void initData1(){
+    private  void initData(){
         SharedPreferences sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String account = sp.getString("USER_NAME", "");
         String password = sp.getString("PASSWORD", "");
         String filename = sp.getString("FILENAME", "");
-        f= account + "-" + password + "-" + filename +".txt";
+        txtFilename = account + "-" + password + "-" + filename +".txt";
         try {
-            ff = Environment.getExternalStorageDirectory()
+            txtFileAndPath = Environment.getExternalStorageDirectory()
                     .getCanonicalPath()
                     + "/Writing/PointData/" + account + "-" + password + "-" + filename +".txt";
         }catch (Exception ignored){}
-        String ss="";
-        String s=getData.readJsonFile(ff,ss);
+        String pointJson=getData.readJsonFile(txtFileAndPath,"");
         Gson gson1=new Gson();
-        List<Han> statusLs = gson1.fromJson(s, new TypeToken<List<Han>>(){}.getType());
+        List<Han> statusLs = gson1.fromJson(pointJson, new TypeToken<List<Han>>(){}.getType());
         Log.d("MainActivity","li="+statusLs);
         if(statusLs!=null){
-            list_han=statusLs;
+            listHans =statusLs;
             for (int i=0;i<statusLs.size();i++ ){
                 listAllPoint.add(statusLs.get(i).getLists());
             }
@@ -257,15 +257,15 @@ public class NoteActivity extends Activity implements View.OnClickListener{
        // String fileName ="config.txt";
         try {
             //文件夹路径
-            File dir = new File(path3);
+            File dir = new File(pointDataPath);
             //文件夹不存在和传入的value值为1时，才允许进入创建
             Gson gson = new Gson();
-            String str = gson.toJson(list_han);
+            String str = gson.toJson(listHans);
             File file = new File(dir, fileName);
             OutputStream out = new FileOutputStream(file);
             out.write(str.getBytes(StandardCharsets.UTF_8));
             out.close();
-            file.getPath();
+            Log.d("progsofts", "" + file.getPath());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -273,9 +273,9 @@ public class NoteActivity extends Activity implements View.OnClickListener{
     }
     private void saveToSystemGallery(Bitmap bmp, long filename) {
         // 首先保存图片
-        File appDir = new File(path2);
+        File appDir = new File(picturePath);
         if (!appDir.exists()) {
-            appDir.mkdir();
+            Log.d("progsofts", "" + appDir.mkdir());
         }
         String fileName = filename+ ".jpg";
         File file = new File(appDir, fileName);
@@ -300,7 +300,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
                 if (fvFont.listPointB.size() > 0) {
                    // Log.d("W", "fv=" + fvFont.listPoint);
                     List<List<WordPoint>> itemPointList = new ArrayList<>();
-                    List<List<Integer>> cL = new ArrayList<>();
+                    List<List<Integer>> colorList = new ArrayList<>();
 
                     for (List<WordPoint> listP : fvFont.listPointB) {
                         List<WordPoint> pointList = new ArrayList<>(listP);
@@ -308,7 +308,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
                     }
                     for(List<Integer>c:fvFont.colorB){
                         List<Integer> cc = new ArrayList<>(c);
-                        cL.add(cc);
+                        colorList.add(cc);
                     }
                     listAllPoint.add(itemPointList);
                     Bitmap bitmap = viewToBitmap(fvFont, fvFont.getWidth(), fvFont.getHeight());
@@ -318,9 +318,9 @@ public class NoteActivity extends Activity implements View.OnClickListener{
                     han.setId(id_han);
                     Date curDate = new Date(System.currentTimeMillis());
                     han.setTime(curDate);
-                    han.setBitmap(path2 + "/" + id_han + ".jpg");
+                    han.setBitmap(picturePath + "/" + id_han + ".jpg");
                     han.setLists(itemPointList);
-                    han.setColor(cL);
+                    han.setColor(colorList);
 
                     saveToSystemGallery(bitmap, id_han);
                    // fvFont.colors.clear();
@@ -358,7 +358,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
 
         //回放
         else if(v.getId()==R.id.btnReBack){
-            if(list_han.size()>0) {
+            if(listHans.size()>0) {
                 //保存图片到本地
                 //跳到回放界面
                 Intent intent = new Intent(NoteActivity.this, Re.class);

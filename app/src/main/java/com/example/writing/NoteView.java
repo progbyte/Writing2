@@ -37,7 +37,7 @@ public class NoteView extends View {
     private Paint mPaint;
     public final List<Integer> colors=new ArrayList<>();
     public final Canvas cacheCanvas;
-    private final Bitmap cachebBitmap;
+    private final Bitmap cachedBitmap;
     public int currentColor = Color.BLACK;
     private int currentSize = 30;
 
@@ -76,8 +76,8 @@ public class NoteView extends View {
         super(context, attrs);
         super.setOnTouchListener(new OnTouchListenerImpl());
         mBaseWidth = currentSize;
-        cachebBitmap=Bitmap.createBitmap(596,372, Config.ARGB_8888);
-        cacheCanvas = new Canvas(cachebBitmap);
+        cachedBitmap =Bitmap.createBitmap(596,372, Config.ARGB_8888);
+        cacheCanvas = new Canvas(cachedBitmap);
         initPaint();
     }
     public void selectPaintSize(int which){
@@ -90,11 +90,6 @@ public class NoteView extends View {
     }
     private class OnTouchListenerImpl implements OnTouchListener{
         public boolean onTouch(View v, MotionEvent event) {
-            boolean canDraw = true;
-            if(!canDraw)
-            {
-                return true;
-            }
             int action = event.getAction() ;
             //获取点横纵坐标
             //手按下
@@ -123,8 +118,8 @@ public class NoteView extends View {
                 double beliefAVG=0;
                 double Intbelief=(beliefAVG*100)/10;
                 Log.e("手写分析测试","这笔画的时间差是"+difftime);
-                Log.e("手写分析测试", "笔画号："+bh +"笔画："+checkBH.BiHua(bh));
-                Toast.makeText(getContext(),"ID:"+bh +" 笔画：" +checkBH.BiHua(bh)+" 置信:"+belief+" 累计:"+Intbelief,Toast.LENGTH_SHORT).show();
+                Log.e("手写分析测试", "笔画号："+bh +"笔画："+ CheckBH.BiHua(bh));
+                Toast.makeText(getContext(),"ID:"+bh +" 笔画：" + CheckBH.BiHua(bh)+" 置信:"+belief+" 累计:"+Intbelief,Toast.LENGTH_SHORT).show();
 
 
 
@@ -335,7 +330,7 @@ public class NoteView extends View {
     //画线
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawBitmap(cachebBitmap,0,0,null);
+        canvas.drawBitmap(cachedBitmap,0,0,null);
         super.onDraw(canvas);
         canvas.drawColor(Color.WHITE);
         draw1(canvas);
