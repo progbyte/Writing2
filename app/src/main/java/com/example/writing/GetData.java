@@ -8,16 +8,15 @@ class GetData {
     //读取数据
     public  String readJsonFile(String p,String pp) {
         StringBuilder sb = new StringBuilder();
-            File file;
-            if(!pp.equals("")) {
-                 file = new File(pp);
-
-            }else {
-                file = new File(p);
-            }
-            try {
+        File file;
+        if (!pp.equals("")) {
+            file = new File(pp);
+        }else {
+            file = new File(p);
+        }
+        try {
             InputStream in;
-            if(file.exists()) {
+            if (file.exists()) {
                 in = new FileInputStream(file);
 
                 int tempbyte;

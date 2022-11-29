@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void duihua(){
+
+    private void duihua() {
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setTitle("提示：");
         builder.setMessage("您确定删除"+st+"?");
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         .getCanonicalPath()
                         + "/Writing/PointData/";
                 list=getFilesAllName(s);
-                Log.d("SS","list"+list);
+                Log.d("progsofts","list:"+list);
             }catch (Exception ignored) {}
             spinner_text = findViewById(R.id.spinner1);
             //第二步：为下拉列表定义一个适配器
@@ -183,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         //显示提示框
         builder.show();
     }
+
     private void delete(String delFile) {
         File file = new File(delFile);
         if (!file.exists()) {
@@ -193,11 +195,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     private void deleteSingleFile(String filePath$Name) {
         File file = new File(filePath$Name);
         // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
         if (file.exists() && file.isFile()) {
-
             if (file.delete()) {
                 Log.e("--Method--", "Copy_Delete.deleteSingleFile: 删除文件" + st+ "成功！");
             } else {
@@ -211,9 +213,8 @@ public class MainActivity extends AppCompatActivity {
     private static List<String> getFilesAllName(String path) {
         File file=new File(path);
         File[] files=file.listFiles();
-
         List<String> s = new ArrayList<>();
-        if (files == null){
+        if (files == null) {
            // s.add("没有练习！");
             Log.e("error","空目录");return s;}
         for (File value : files) {
@@ -222,25 +223,28 @@ public class MainActivity extends AppCompatActivity {
         }
         return s;
     }
-            // 初始化UI对象
-            private void initUI() {
-                bt_login = findViewById(R.id.bt_login); // 登录按钮
-                //ji=findViewById(R.id.bt_jixu);
-                et_account = findViewById(R.id.et_account); // 输入账号
-                et_filename=findViewById(R.id.filename);
-                et_password = findViewById(R.id.et_password); // 输入密码
-                del=findViewById(R.id.del);
-            }
-            @Override
-            public void onBackPressed() {
-                long secondTime = System.currentTimeMillis();
-                if (secondTime - firstTime > 2000) {
-                    Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                    firstTime = secondTime;
-                } else {
-                    System.exit(0);
-                }
-            }
+
+    // 初始化UI对象
+    private void initUI() {
+        bt_login = findViewById(R.id.bt_login); // 登录按钮
+        //ji=findViewById(R.id.bt_jixu);
+        et_account = findViewById(R.id.et_account); // 输入账号
+        et_filename=findViewById(R.id.filename);
+        et_password = findViewById(R.id.et_password); // 输入密码
+        del=findViewById(R.id.del);
+    }
+
+    @Override
+    public void onBackPressed() {
+        long secondTime = System.currentTimeMillis();
+        if (secondTime - firstTime > 2000) {
+            Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            firstTime = secondTime;
+        } else {
+            System.exit(0);
+        }
+    }
+
     private void checkInitStatus(SharedPreferences sp) {
         //if (sp.getBoolean("ISCHECK", false)) {
         //设置默认是记录密码状态

@@ -1,6 +1,5 @@
 package com.example.writing;
 
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
-//import android.util.Log;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -49,10 +47,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
     private final GetData getData=new GetData();
     private String picturePath, pointDataPath;
     private NoteView fvFont;
-    private static final List<Bitmap> listBitMap= new ArrayList<>();
-    private final List<List<List<WordPoint>>>  listAllPoint= new ArrayList<>();
     private List<Han> listHans = new ArrayList<>();
-
     public ArrayList<String> results= new ArrayList<>();
 
     //写在成员变量中
@@ -64,10 +59,8 @@ public class NoteActivity extends Activity implements View.OnClickListener{
             switch (msg.what){
                 //暂定0x11为手写识别结果成功
                 case 0x11:
-                    //String s = (String) msg.obj;\
                     StringBuilder sb=new StringBuilder();
-                    for(String v:results)
-                    {
+                    for(String v:results) {
                         //因为是用于关键词提取，所以我们就把同一张图片的所有结果都用一句话存起来就好了
                         sb.append(v);
                     }
@@ -88,26 +81,19 @@ public class NoteActivity extends Activity implements View.OnClickListener{
                     File file = new File(picturePath, han.getId()+".txt");
                     OutputStream out;
                     try {
-
                         out = new FileOutputStream(file);
                         out.write(output.getBytes(StandardCharsets.UTF_8));
                         out.close();
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                     break;
                 case 0x12:
                     //String ss = (String) msg.obj;
-
                     break;
             }
-
-
         }
     };
-
 
     public void onCreate(Bundle s){
         super.onCreate(s);
@@ -204,7 +190,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
             e.printStackTrace();
         }
         try {
-            picturePath = Environment.getExternalStorageDirectory()
+            picturePath = Environment.getExternalStorageDirectory() // /sdcard/Writing/Picture
                     .getCanonicalPath()
                     + "/Writing/Picture";
             File file1 = new File(picturePath);
@@ -216,7 +202,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
             e.printStackTrace();
         }
         try {
-            pointDataPath = Environment.getExternalStorageDirectory()
+            pointDataPath = Environment.getExternalStorageDirectory() // /sdcard/Writing/PointData
                     .getCanonicalPath()
                     + "/Writing/PointData";
             File file2 = new File(pointDataPath);
@@ -230,9 +216,9 @@ public class NoteActivity extends Activity implements View.OnClickListener{
     }
     private  void initData(){
         SharedPreferences sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String account = sp.getString("USER_NAME", "");
-        String password = sp.getString("PASSWORD", "");
-        String filename = sp.getString("FILENAME", "");
+        String account = sp.getString("USER_NAME", ""); //姓名
+        String password = sp.getString("PASSWORD", ""); //学号
+        String filename = sp.getString("FILENAME", ""); //科目
         txtFilename = account + "-" + password + "-" + filename +".txt";
         try {
             txtFileAndPath = Environment.getExternalStorageDirectory()
@@ -243,18 +229,14 @@ public class NoteActivity extends Activity implements View.OnClickListener{
         Gson gson1=new Gson();
         List<Han> statusLs = gson1.fromJson(pointJson, new TypeToken<List<Han>>(){}.getType());
         Log.d("MainActivity","li="+statusLs);
-        if(statusLs!=null){
+        if (statusLs!=null) {
             listHans =statusLs;
-            for (int i=0;i<statusLs.size();i++ ){
-                listAllPoint.add(statusLs.get(i).getLists());
-            }
         }
 
     }
-    //写到本地文件夹
+
     private void saveToLocal(String fileName) {
-        //文件名
-       // String fileName ="config.txt";
+        //写到本地文件夹 文字点阵
         try {
             //文件夹路径
             File dir = new File(pointDataPath);
@@ -310,10 +292,8 @@ public class NoteActivity extends Activity implements View.OnClickListener{
                         List<Integer> cc = new ArrayList<>(c);
                         colorList.add(cc);
                     }
-                    listAllPoint.add(itemPointList);
                     Bitmap bitmap = viewToBitmap(fvFont, fvFont.getWidth(), fvFont.getHeight());
-                    listBitMap.add(viewToBitmap(fvFont, fvFont.getWidth(), fvFont.getHeight()));
-                    Han han = new Han();
+                    Han han = new Han(); // 代表提交的一个汉字图形, 点阵, 笔画等信息
                     long id_han = new Date().getTime();
                     han.setId(id_han);
                     Date curDate = new Date(System.currentTimeMillis());
@@ -339,31 +319,26 @@ public class NoteActivity extends Activity implements View.OnClickListener{
 
 
                 }
-            }else Toast.makeText(this, "请写字！", Toast.LENGTH_SHORT).show();
-
-            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fenmian);
-
+            } else
+                Toast.makeText(this, "请写字！", Toast.LENGTH_SHORT).show();
         }
 
         //重写按钮
-        if(v.getId()==R.id.btnReWrite)
-        {
+        if(v.getId()==R.id.btnReWrite) {
             ReWrite();
         }
-
         //设置
-        else if(v.getId()==R.id.setting){
+        else if(v.getId()==R.id.setting) {
             showSetDialog();
         }
-
         //回放
-        else if(v.getId()==R.id.btnReBack){
+        else if(v.getId()==R.id.btnReBack) {
             if(listHans.size()>0) {
                 //保存图片到本地
                 //跳到回放界面
                 Intent intent = new Intent(NoteActivity.this, Re.class);
                 startActivity(intent);
-            }else
+            } else
                 Toast.makeText(NoteActivity.this,"你都没写，哪有回放啊！",Toast.LENGTH_SHORT).show();
         }
     }
@@ -389,6 +364,7 @@ public class NoteActivity extends Activity implements View.OnClickListener{
             fvFont.invalidate();
         }
     }
+
     //生成位图
     private Bitmap viewToBitmap(View view, int bitmapWidth, int bitmapHeight){
         Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Config.ARGB_8888);

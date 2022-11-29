@@ -32,12 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
-
-    private final List<List<List<WordPoint>>>  listAllPoint= new ArrayList<>();
-    private final List<List<List<Integer>>>listAllColor=new ArrayList<>();
+    private final List<List<List<WordPoint>>>  listAllPoint= new ArrayList<>(); // 分三层, 1 第几个汉字 2 第几笔 3 某笔的中间点阵
+    private final List<List<List<Integer>>>listAllColor=new ArrayList<>();      // 分三层, 1 第几个汉字 2 第几笔 3 某笔的中间点阵
     //这个是用于保存文字识别结果的路径，类似上面的listALLxxx
     private final List<String> listALLOCR= new ArrayList<>();
-
 
     private SeekBar seekBar;
     private Button btn_p;
@@ -45,22 +43,22 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
     private Button btJ;
     private ImageView start_end;
     private boolean isPlaying = false;
-    private boolean canReplay =false;
-    private final boolean testReDraw =false;
-    private boolean isPausex2 =false;
-    private boolean isQuit =false;
+    private boolean canReplay = false;
+    private final boolean testReDraw = false;
+    private boolean isPausex2 = false;
+    private boolean isQuit = false;
     private TextView t_pro;
     private TextView t_end;
     private SharedPreferences sp;
     private String account;
     private String password;
     private String filename;
-    private int jia=50;
+    private int jia = 50;
     private ReView fvFont;
-    private final GetData getData=new GetData();
-    private boolean jd=false;
+    private final GetData getData = new GetData();
+    private boolean jd = false;
     private ProgressBarAsyncTask progressBarAsyncTask;
-    private String pathFromSP ="";
+    private String pathFromSP = "";
 
     //添加一个搜索功能，需要有一个编辑框，搜索按钮
     private EditText et_search;
@@ -117,7 +115,7 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
         Button btn_search = findViewById(R.id.btn_search);
 
         //搜索按钮的处理
-        btn_search.setOnClickListener(v -> {
+        btn_search.setOnClickListener(v -> { // search button
             String search=et_search.getText().toString();
             for(int i=0;i<listALLOCR.size();i++)
             {
@@ -175,10 +173,10 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
         });
         sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         account = sp.getString("USER_NAME", "");
-        password =sp.getString("PASSWORD", "");
-        filename=sp.getString("FILENAME","");
+        password = sp.getString("PASSWORD", "");
+        filename = sp.getString("FILENAME","");
         String filepath = sp.getString("Path", "");
-        if(!filepath.equals("")) {
+        if (!filepath.equals("")) {
             try {
                 pathFromSP = Environment.getExternalStorageDirectory()
                         .getCanonicalPath()
@@ -202,10 +200,8 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
         Gson gson1=new Gson();
         final List<Han> listHan = gson1.fromJson(str, new TypeToken<List<Han>>(){}.getType());
         t_pro.setText("0");
-        if(listHan!=null) {
-
+        if (listHan!=null) {
             for (int i = 0; i < listHan.size(); i++) {
-
                 listAllPoint.add(listHan.get(i).getLists());  // onCreate 初始化
                 listAllColor.add(listHan.get(i).getColor());
                 t_pro.setText("1");
@@ -223,8 +219,8 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
         fvFont.canDraw=false;
         btnShare.setOnClickListener(v -> {
             account = sp.getString("USER_NAME", "");
-            password =sp.getString("PASSWORD", "");
-            filename=sp.getString("FILENAME","");
+            password = sp.getString("PASSWORD", "");
+            filename = sp.getString("FILENAME","");
             String ff1 =account+"-"+password+"-"+filename+".txt";
             try {
                 File file = new File(Environment.getExternalStorageDirectory()
@@ -237,19 +233,20 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
             } catch (Exception ignored) {
             }
         });
+
         btJ.setOnClickListener(v -> {
-            if(btJ.getText().equals("加速")){
+            if(btJ.getText().equals("加速")) {
                 btJ.setText("恢复");
                 jia=25;
                 //Toast.makeText(Re.this, "加速不稳定，卡死我不管的哦！", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 btJ.setText("加速");
                 jia=50;
             }
         });
-        if(hanIndex ==0){btn_p.setEnabled(false);}
-        //上一页
-        btn_p.setOnClickListener(v -> {
+
+        btn_p.setEnabled(hanIndex != 0);
+        btn_p.setOnClickListener(v -> { // pre button
             if(hanIndex ==1){btn_p.setEnabled(false);}
             btn_n.setEnabled(true);
             if (hanIndex >0) {
@@ -270,8 +267,9 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
                 seekBar.setProgress(hanIndex);
             }
         });
+
         btn_n.setEnabled(hanIndex != listAllPoint.size() - 1);
-        btn_n.setOnClickListener(v -> {
+        btn_n.setOnClickListener(v -> { // next button
             btn_p.setEnabled(true);
             if(hanIndex ==listAllPoint.size()-2)btn_n.setEnabled(false);
             if (hanIndex < listAllPoint.size()-1) {
@@ -292,7 +290,8 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
                 seekBar.setProgress(hanIndex);
             }
         });
-        del.setOnClickListener(v -> {
+
+        del.setOnClickListener(v -> {  // del button
             assert listHan != null;
             if (listHan.size() > 1) {
                 ReWrite();
@@ -347,7 +346,8 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
                 Toast.makeText(Re.this,"这是我的底线，不能再删了！",Toast.LENGTH_SHORT).show();
         });
     }
-    private void initView(int item){
+
+    private void initView(int item) {
         Log.d("dfs","tw="+listAllPoint.get(item));
         ReWrite();
         if(listAllPoint.size()>0) {
@@ -370,6 +370,7 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
             }
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -379,9 +380,7 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
     /** 分享指定（路径、类型）的文件 */
     private void shareFile(File file, String fileType)
     {
-
-        if (file.exists())
-        {
+        if (file.exists()) {
             Uri uri= FileProvider.getUriForFile(this,"com.example.writing.fileProvider", file);
             // Log.d("MM","uri="+uri);
             shareFile(this, uri, fileType);
@@ -389,6 +388,7 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
     }
     private final static int SELECT = 1;	// 标记选取
     private final static int SHARE = 2;		// 标记分享
+
     /** Activity执行结果 */
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -414,23 +414,22 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
         int start = uriPath.lastIndexOf("/");
         int end = uriPath.lastIndexOf(":");
         String type = "*/*";
-        if (end > start)
-        {
+        if (end > start) {
             type = uriPath.substring(start + 1, end) + "/*";
         }
         return type;
     }
+
     /** 分享完成逻辑 */
     private void ShareSuccess()
     {
         Toast.makeText(this, "分享完成！", Toast.LENGTH_SHORT).show();
-
     }
+
     /** 调用系統方法, 分享文件 */
     private static void shareFile(Activity context, Uri fileUri, String type)
     {
-        if (fileUri != null)
-        {
+        if (fileUri != null) {
             // Log.d("MM","uri="+fileUri);
             Intent shareInt = new Intent(Intent.ACTION_SEND);
             shareInt.putExtra(Intent.EXTRA_STREAM, fileUri);
@@ -439,9 +438,7 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
             shareInt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shareInt.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(Intent.createChooser(shareInt, "分享给"));
-        }
-        else
-        {
+        } else {
             Toast.makeText(context, "分享文件不存在", Toast.LENGTH_SHORT).show();
         }
     }
@@ -464,6 +461,7 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
            // fvFont.invalidate();
         //}
     }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         t_pro.setText(""+(progress+1));
@@ -485,22 +483,21 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
         isPausex2 =false;
         btn_p.setEnabled(hanIndex != 0);
         btn_n.setEnabled(hanIndex != listAllPoint.size() - 1);
-        isQuit =true;
+        isQuit = true;
         start_end.setImageResource(R.drawable.kaishi);
         ReWrite();
         if(hanIndex <=listAllPoint.size()-1) {
             initView(hanIndex);
         }
-
-
     }
+
     class ProgressBarAsyncTask extends AsyncTask<Void, Integer, Void> {
         final List<List<List<WordPoint>>> points;
         final List<List<List<Integer>>> colors;
         ProgressBarAsyncTask(List<List<List<WordPoint>>> points, List<List<List<Integer>>> colors)
         {
-            this.points=points;
-            this.colors=colors;
+            this.points=points;  // 实际为 listAllPoint
+            this.colors=colors;  // 实际为 listAllPoint
         }
         /**
          * 这里的Integer参数对应AsyncTask中的第一个参数
@@ -510,14 +507,13 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
          */
         @Override
         protected Void doInBackground(Void... params) {
-
                // Log.d("ss","a="+flag1);
                 for (int i = bihuaIndex; i < points.get(hanIndex).size(); i++) { //一个汉字多少个笔画
                   //  Log.d("ss","a1="+itemFlag);
                     List<WordPoint> teampPoint = points.get(hanIndex).get(i);
                     List<Integer> teampColor=colors.get(hanIndex).get(i);
+                    fvFont.mColor = new ArrayList<>();
                     fvFont.mPointsB = new ArrayList<>();
-                    fvFont.mPointsB=new ArrayList<>();
                     for (int j = pointIndex; j < teampPoint.size(); j++) { //一个笔画多少个点阵, 一笔一笔地画
                         if (isPause) {
                             fvFont.colorB.add(fvFont.mColor);
@@ -525,12 +521,12 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
                             bihuaIndex =i;
                             return null;
                         }
-                            if (isQuit) {
-                                isQuit = false;
-                                bihuaIndex = 0;
-                                pointIndex = 0;
-                                return null;
-                            }
+                        if (isQuit) {
+                            isQuit = false;
+                            bihuaIndex = 0;
+                            pointIndex = 0;
+                            return null;
+                        }
                         fvFont.mColor.add(teampColor.get(j));
                         fvFont.mPointsB.add(teampPoint.get(j));
                         fvFont.postInvalidate();  // 重画界面
@@ -547,11 +543,11 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
                     fvFont.listPointB.add(fvFont.mPointsB);
                     fvFont.mPointsB = new ArrayList<>();
                     fvFont.mColor=new ArrayList<>();
-                    fvFont.postInvalidate();
+                    fvFont.postInvalidate();  // 重画界面
                 }
-                bihuaIndex =0;
-            canReplay =true;
-            pointIndex =0;
+            bihuaIndex = 0;
+            canReplay = true;
+            pointIndex = 0;
             return null;
         }
         /**
@@ -585,14 +581,15 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
         @Override
         protected void onProgressUpdate(Integer... values) {
             fvFont.invalidate();
-
         }
     }
+
     @Override
     protected void onDestroy() {
-        isQuit =true;
         super.onDestroy();
+        isQuit =true;
     }
+
     @Override
     protected void onPause() {
         super.onPause();

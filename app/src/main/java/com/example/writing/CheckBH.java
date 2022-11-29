@@ -1,8 +1,5 @@
 package com.example.writing;
 
-
-//import android.util.Log;
-
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -14,8 +11,6 @@ public class CheckBH {
     private final List<Integer> bb=new ArrayList<>();
     private final List<WordPoint> list1 = new ArrayList<>();
     private final List<Integer> lky = new ArrayList<>();
-
-
     /**
      * 添加一个数据结构，其中包含笔画的一些属性，用于身份鉴定.
      * 从笔画上获取初步属性
@@ -100,10 +95,9 @@ public class CheckBH {
 
             if ((lky.get(i) == 0||i==list.size()-1)&&i>1)
             {
-
                 if (((lky.get(i - 1)) != 0) && ((lky.get(i - 1)) != -1)) {
                     bb.add(lky.get(i - 1));
-                   // Log.d("vvs","bi="+lky.get(i - 1));
+                    Log.d("progsofts","bi = " + lky.get(i - 1));
                 }
                 list1.clear();
                 list1.add(list.get(i));
@@ -111,13 +105,14 @@ public class CheckBH {
         }
         for(int i=0;i<bb.size();i++){
             if((bb.get(i)==6||bb.get(i)==61||bb.get(i)==62||bb.get(i)==63)&&i!=0&&i!=bb.size()-1){
-                Log.d("djkdj", "dkjfdkj");
+                Log.d("progsofts", "bb.get(i): " + i + " " + bb.get(i));
             }else
                 bh.add(bb.get(i));
             if(bh.size()>1&&bh.get(0)==6){
                 bh.remove(0);
             }
         }
+        Log.d("progsofts", "bh: " + bh + " bb: " + bb);
         /*
         tt = "一"; 横 1
         tt = "丨"; 竖 2
@@ -371,7 +366,6 @@ public class CheckBH {
         double xMaxA = Math.atan2(Math.abs(xMaxY), Math.abs(xMaxX)) * 180 / Math.PI;
         double A = Math.atan2(Math.abs(yD), Math.abs(xD)) * 180 / Math.PI;
 
-
         map = new HashMap<>();
         /*
         //map.put("firstX", ( double ) firstX);
@@ -395,7 +389,7 @@ public class CheckBH {
         map.put("DX_P", (double) 10 * xMaxX / xMaxY);
         map.put("DY_P", (double) 10 * yMaxX / yMaxY);
         map.put("DP", (double) 10 * xD / yD);
-        map.put("BIG", (double) Math.sqrt(xD * xD + yD * yD));
+        map.put("BIG", Math.sqrt(xD * xD + yD * yD));
 
         /*
          * =>firstX
@@ -416,7 +410,6 @@ public class CheckBH {
          * =>AngleMaxX
          * =>Angle
          */
-
 
         //Log.d("an","AN="+maxAngle);
         if (Math.abs(LastX - firstX) < 1 && Math.abs(LastY - firstY) < 1) {
@@ -470,7 +463,6 @@ public class CheckBH {
         tt = "丶"; 点 6
          */
     }
-
 
     //笔画视图
     public static String BiHua(int j){

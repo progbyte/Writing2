@@ -1,6 +1,5 @@
 package com.example.writing;
 
-
 public class Bezier {
     //控制点的，
     private final WordPoint mControl = new WordPoint();
@@ -129,5 +128,4 @@ public class Bezier {
     private double getWidth(double w0, double w1, double t){
         return w0 + (w1 - w0) * t;
     }
-
 }

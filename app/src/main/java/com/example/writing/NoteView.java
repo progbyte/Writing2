@@ -40,10 +40,6 @@ public class NoteView extends View {
     private final Bitmap cachedBitmap;
     public int currentColor = Color.BLACK;
     private int currentSize = 30;
-
-
-
-
     //时间差
     private Date beginDate ;
     public long difftime;
@@ -69,9 +65,11 @@ public class NoteView extends View {
             Color.CYAN,
             Color.LTGRAY
     };
+
     private void setPaintStyle(){
         mBaseWidth = currentSize;
     }
+
     public NoteView(Context context, AttributeSet attrs) {
         super(context, attrs);
         super.setOnTouchListener(new OnTouchListenerImpl());
@@ -80,14 +78,17 @@ public class NoteView extends View {
         cacheCanvas = new Canvas(cachedBitmap);
         initPaint();
     }
+
     public void selectPaintSize(int which){
         currentSize = Integer.parseInt(this.getResources().getStringArray(R.array.paintsize)[which]);
         setPaintStyle();
     }
+
     public void selectPaintColor(int which){
         currentColor = paintColor[which];
         setPaintStyle();
     }
+
     private class OnTouchListenerImpl implements OnTouchListener{
         public boolean onTouch(View v, MotionEvent event) {
             int action = event.getAction() ;
@@ -95,7 +96,6 @@ public class NoteView extends View {
             //手按下
             if(action == MotionEvent.ACTION_DOWN){
                 onDown(event);
-
                 //开始计时
                 beginSetTime();
             }
@@ -106,7 +106,6 @@ public class NoteView extends View {
             //手抬起
             else if(action == MotionEvent.ACTION_UP){
                 onUp(event);
-
                 //结束计时
                 endSetTime();
                 //手抬起来的时候，赶紧分析笔画的属性并且获取这次的map
@@ -117,17 +116,16 @@ public class NoteView extends View {
                 double belief =0;
                 double beliefAVG=0;
                 double Intbelief=(beliefAVG*100)/10;
-                Log.e("手写分析测试","这笔画的时间差是"+difftime);
-                Log.e("手写分析测试", "笔画号："+bh +"笔画："+ CheckBH.BiHua(bh));
-                Toast.makeText(getContext(),"ID:"+bh +" 笔画：" + CheckBH.BiHua(bh)+" 置信:"+belief+" 累计:"+Intbelief,Toast.LENGTH_SHORT).show();
-
-
-
+                Log.e("手写分析测试","这笔画的时间差:" + difftime);
+                Log.e("手写分析测试","这笔画的map:" + map);
+                Log.e("手写分析测试", "笔画号：" + bh + "笔画："+ CheckBH.BiHua(bh) +" 置信:" + belief + " 累计:" + Intbelief);
+                Toast.makeText(getContext(),"笔画号：" + bh + " 笔画：" + CheckBH.BiHua(bh) + " 置信:" + belief + " 累计:" + Intbelief, Toast.LENGTH_SHORT).show();
             }
             invalidate() ;
             return true;
         }
     }
+
     private void onDown(MotionEvent event){
         initPaint();
         colors.add(currentColor);
@@ -145,6 +143,7 @@ public class NoteView extends View {
         mLastPoint = curPoint;
         canSave=true;
     }
+
     /**
      * 手指移动的事件
      */
@@ -177,6 +176,7 @@ public class NoteView extends View {
         moveNeetToDo(curDis);
         mLastPoint = curPoint;
     }
+
     /**
      * 手指抬起来的事件
      */
@@ -191,21 +191,16 @@ public class NoteView extends View {
         int steps = 1 + (int) curDis / STEPFACTOR;
         double step = 1.0 / steps;
         for (double t = 0; t < 1.0; t += step) {
-            //Log.d("d","step="+t);
+            Log.d("progsofts","t=" + t + " step=" + step);
             WordPoint point = mBezier.getPoint(t);
             mHWPointList.add(point);
             mPointsB.add(point) ;
             mColor.add(currentColor);
         }
-
         mBezier.end();
         listPointB.add(mPointsB);
         colorB.add(mColor);
         mPointList.clear();
-
-
-
-        //
     }
 
 
@@ -229,7 +224,7 @@ public class NoteView extends View {
         int steps = 1 + (int) curDis / STEPFACTOR;
         double step = 1.0 / steps;
         for (double t = 0; t < 1.0; t += step) {
-          //  Log.d("d","step="+t);
+            Log.d("progsofts","t=" + t + " step=" + step);
             WordPoint point = mBezier.getPoint(t);
             mHWPointList.add(point);
             mPointsB.add(point);
@@ -263,7 +258,7 @@ public class NoteView extends View {
     }
 
     private void drawNeetToDo(Canvas canvas) {
-        int i=0;
+        int i = 0;
         for(List<WordPoint> itemPoints : listPointB)
         {
             if(itemPoints.size() > 1)
@@ -271,14 +266,10 @@ public class NoteView extends View {
                 Iterator<WordPoint> pIterator = itemPoints.iterator() ;
                 WordPoint first  = null ;
                 WordPoint last = null ;
-                while(pIterator.hasNext())
-                {
-                    if(first == null)
-                    {
+                while (pIterator.hasNext()) {
+                    if(first == null) {
                         first = pIterator.next() ;
-                    }
-                    else
-                    {
+                    } else {
                         if(last != null )
                         {
                             first =last;
@@ -296,22 +287,16 @@ public class NoteView extends View {
            // Log.d("d","dd="+(i+1));
         }
 //过程
-        if(mPointsB.size() > 1)
-        {
+        if(mPointsB.size() > 1) {
             //colors.add(Color.BLACK);
             Iterator<WordPoint> pIterator = mPointsB.iterator() ;
             WordPoint first  = null ;
             WordPoint last = null ;
-            while(pIterator.hasNext())
-            {
-                if(first == null)
-                {
+            while(pIterator.hasNext()) {
+                if (first == null) {
                     first = pIterator.next();
-                }
-                else
-                {
-                    if(last != null )
-                    {
+                } else {
+                    if (last != null) {
                         first =last;
                     }
                     last = pIterator.next() ;
@@ -320,7 +305,6 @@ public class NoteView extends View {
                     //Log.d("fist","point1="+first);
                     drawLine(canvas,first.x, first.y,first.width, last.x, last.y,last.width, mPaint);
                     //canvas.drawLine(first.x, first.y,last.x, last.y,mPaint);
-
                 }
             }
            // colors.remove(colors.size()-1);

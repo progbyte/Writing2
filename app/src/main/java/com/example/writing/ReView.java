@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -33,14 +34,14 @@ public class ReView extends View {
         paint.setStyle(Paint.Style.FILL);
         super.onDraw(canvas);
 
-       for(int j=0;j<listPointB.size();j++) {
-           List<WordPoint> lists=listPointB.get(j);
-           List<Integer>colors=colorB.get(j);
+       for(int j = 0; j < listPointB.size(); j++) {
+           List<WordPoint> lists = listPointB.get(j);
+           List<Integer>colors = colorB.get(j);
            for (int i = 1; i < lists.size(); i++) {
                WordPoint first;
                WordPoint last;
                first = lists.get(i - 1);
-               last =lists.get(i);
+               last = lists.get(i);
                paint.setColor(colors.get(i));
                drawLine(canvas, first.x, first.y, first.width, last.x, last.y, last.width, paint);
                //canvas.drawLine(first.x, first.y, last.x, last.y, paint);
@@ -56,7 +57,9 @@ public class ReView extends View {
                 drawLine(canvas, first.x, first.y, first.width, last.x, last.y, last.width, paint);
                 //canvas.drawLine(first.x, first.y, last.x, last.y, paint);
         }
+        Log.d("progsofts", "mPointB: " + mPointsB);
     }
+
     private void drawLine(Canvas canvas, double x0, double y0, double w0, double x1, double y1, double w1, Paint paint) {
         //求两个数字的平方根 x的平方+y的平方在开方记得X的平方+y的平方=1，这就是一个园
         double curDis = Math.hypot(x0 - x1, y0 - y1);

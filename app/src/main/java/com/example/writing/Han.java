@@ -1,6 +1,5 @@
 package com.example.writing;
 
-
 import java.util.Date;
 import java.util.List;
 
