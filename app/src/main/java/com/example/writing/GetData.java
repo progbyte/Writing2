@@ -1,5 +1,7 @@
 package com.example.writing;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -7,6 +9,7 @@ import java.io.InputStream;
 class GetData {
     //读取数据
     public  String readJsonFile(String p,String pp) {
+        Log.d("progsofts", "readJsonFile:" + p + "," + pp);
         StringBuilder sb = new StringBuilder();
         File file;
         if (!pp.equals("")) {

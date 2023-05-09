@@ -478,7 +478,7 @@ public class Re extends Activity implements SeekBar.OnSeekBarChangeListener {
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public void onStopTrackingTouch(SeekBar seekBar) { // stop touch
         //jd=true;
         isPausex2 =false;
         btn_p.setEnabled(hanIndex != 0);

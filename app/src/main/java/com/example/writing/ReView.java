@@ -46,7 +46,7 @@ public class ReView extends View {
                drawLine(canvas, first.x, first.y, first.width, last.x, last.y, last.width, paint);
                //canvas.drawLine(first.x, first.y, last.x, last.y, paint);
            }
-          // Log.d("s","ss"+j);
+          Log.d("progsofts","lists: " + lists);
        }
         for (int i = 1; i < mPointsB.size(); i++) {
             WordPoint first;

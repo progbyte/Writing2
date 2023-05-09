@@ -216,10 +216,10 @@ public class NoteActivity extends Activity implements View.OnClickListener{
     }
     private  void initData(){
         SharedPreferences sp = this.getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String account = sp.getString("USER_NAME", ""); //姓名
-        String password = sp.getString("PASSWORD", ""); //学号
-        String filename = sp.getString("FILENAME", ""); //科目
-        txtFilename = account + "-" + password + "-" + filename +".txt";
+        String account = sp.getString("USER_NAME", ""); //学号
+        String password = sp.getString("PASSWORD", ""); //姓名
+        String filename = sp.getString("FILENAME", ""); //课本
+        txtFilename = account + "-" + password + "-" + filename +".txt"; //学号-姓名-课本
         try {
             txtFileAndPath = Environment.getExternalStorageDirectory()
                     .getCanonicalPath()
@@ -228,15 +228,14 @@ public class NoteActivity extends Activity implements View.OnClickListener{
         String pointJson=getData.readJsonFile(txtFileAndPath,"");
         Gson gson1=new Gson();
         List<Han> statusLs = gson1.fromJson(pointJson, new TypeToken<List<Han>>(){}.getType());
-        Log.d("MainActivity","li="+statusLs);
+        Log.d("MainActivity","list Hans from file = " + statusLs);
         if (statusLs!=null) {
             listHans =statusLs;
         }
-
     }
 
     private void saveToLocal(String fileName) {
-        //写到本地文件夹 文字点阵
+        //写到本地文件 文字点阵
         try {
             //文件夹路径
             File dir = new File(pointDataPath);

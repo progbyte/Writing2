@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Writing</string>
+    <string name="app_name">作业本</string>
     <string name="action_settings">Settings</string>
     <string name="text_back">返回</string>
     <string name="text_forward">提交</string>
