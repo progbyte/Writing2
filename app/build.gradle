@@ -1,13 +1,18 @@
 apply plugin: 'com.android.application'
 
+def incVersionCode() {
+    return new Date().format("1.YYYYMMdd.HHmm", TimeZone.getTimeZone("GMT+8"))
+}
+
 android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.example.writing"
         minSdkVersion 23
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName incVersionCode()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
