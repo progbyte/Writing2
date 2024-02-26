@@ -318,8 +318,9 @@ public class NoteActivity extends Activity implements View.OnClickListener{
 
 
                 }
-            } else
+            } else {
                 Toast.makeText(this, "请写字！", Toast.LENGTH_SHORT).show();
+            }
         }
 
         //重写按钮
