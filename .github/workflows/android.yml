@@ -27,15 +27,9 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1 # 创建一个新的发布版本
-      with:
-        tag_name: v${{ github.ref }} # 根据分支或标签名称创建对应的发布版本号
-
     - name: Upload Artifact
       uses: actions/upload-artifact@v3 # 上传构建好的 APK 文件作为发布版本的附件
       with:
         path: app/build/outputs/apk/release/*.apk # 指定 APK 文件路径
-        artifact_name: android-app.apk # 指定附件名称
+        name: android-appapk # 指定附件名称
         overwrite: true # 若已经存在同名附件则覆盖
